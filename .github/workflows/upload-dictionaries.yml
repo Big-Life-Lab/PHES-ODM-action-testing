@@ -1,9 +1,13 @@
-name: Update Documentation
+name: Upload Dictionaries
+
 on:
-  workflow_dispatch:
+  pull_request:
+    types: [closed]
+    branches:
+      - 'release/*'
+
 jobs:
-  build-docs:
-    runs-on: ubuntu-latest
+  upload-dictionaries:
     defaults:
       run:
         shell: bash
@@ -20,4 +24,4 @@ jobs:
         with:
           working-directory: R-package
       - name: Source code
-        run: R -e 'source("R/create-release-files.R"); create_release_files(OSF_REPO_LINK = ${{secrets.OSF_REPO_LINK}}, OSF_TOKEN = ${{secrets.OSF_TOKEN}}, github_token = "${{ secrets.ACTION_TOKEN }}")'
+        run: R -e 'source("R/osf-interactions.R"); update_osf(OSF_REPO_LINK = ${{secrets.OSF_REPO_LINK}}, OSF_TOKEN = ${{secrets.OSF.TOKEN}})'
